@@ -1,6 +1,9 @@
+//import { GoogleSpreadsheet } from "google-spreadsheet";
+
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 
-const getDoc = async () => {
+// Carrega o documento do Google Sheets
+async function getDoc() {
   const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEET);
   try {
     await doc.useServiceAccountAuth({
@@ -10,11 +13,13 @@ const getDoc = async () => {
     await doc.loadInfo();
     return doc;
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao obter o documento:", error);
+    throw error;
   }
-};
+}
 
-const parsedDoc = async () => {
+// Analisa o documento e retorna os dados desejados
+async function parsedDoc() {
   try {
     const document = await getDoc();
     const documentRows = await document.sheetsByIndex[0].getRows();
@@ -26,9 +31,10 @@ const parsedDoc = async () => {
       };
     });
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao analisar o documento:", error);
+    throw error;
   }
-};
+}
 
 module.exports = {
   parsedDoc,
